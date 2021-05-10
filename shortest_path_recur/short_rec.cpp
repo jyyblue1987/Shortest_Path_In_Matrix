@@ -9,14 +9,14 @@ int cost(int i, int j, int **weight, int rows, int cols, int *path) { // i is th
 		return weight[i][0];
 	}
 	// recursive call	
-	int left = cost(i, j - 1, weight, rows, cols, path);
-	int min = left;
+	int up = cost((i - 1 + rows) % rows, j - 1, weight, rows, cols, path);
+	int min = up;
 
 	int *path1 = new int[j];
-	int up = cost((i - 1 + rows) % rows, j - 1, weight, rows, cols, path1);
-	if (up < min)
+	int left = cost(i, j - 1, weight, rows, cols, path1);
+	if (left < min)
 	{
-		min = up;
+		min = left;
 		memcpy(path, path1, j * sizeof(int));
 	}
 
@@ -45,12 +45,20 @@ int main() {
 	//		cin >> weight[i][j];
 
 	int rows = 5, cols = 6;
+	//int weight1[][6] = {
+	//	{ 3,4,1,2,8,6 },
+	//	{ 6,1,8,2,7,4 },
+	//	{ 5,9,3,9,9,5 },
+	//	{ 8,4,1,3,2,6 },
+	//	{ 3,7,2,8,6,4 }
+	//};
+
 	int weight1[][6] = {
 		{ 3,4,1,2,8,6 },
 		{ 6,1,8,2,7,4 },
 		{ 5,9,3,9,9,5 },
 		{ 8,4,1,3,2,6 },
-		{ 3,7,2,8,6,4 }
+		{ 3,7,2,1,2,3 }
 	};
 
 	int **weight = new int*[rows];

@@ -12,18 +12,20 @@ int cost(int i, int j, int **weight, int rows, int cols, int *path, int **memo, 
 	}
 	int x = 0, y = 0;
 	// recursive call		
-	y = i, x = j - 1;
-	int left = memo[y][x];
-	if (left == MAX_VAL)
-		left = cost(y, x, weight, rows, cols, path, memo, memo_path);
+	x = j - 1;
+	y = (i - 1 + rows) % rows;
+	int up = memo[y][x];
+	if (up == MAX_VAL)
+		up = cost(y, x, weight, rows, cols, path, memo, memo_path);
 	else
 		memcpy(path, memo_path[y][x], j * sizeof(int));
 
-	int min = left;
+	int min = up;
 
 	int *path1 = new int[j];	
-	y = (i - 1 + rows) % rows;
-	int up = memo[y][x];
+	
+	y = i;
+	int left = memo[y][x];
 	if( up == MAX_VAL )
 		up = cost(y, x, weight, rows, cols, path1, memo, memo_path);
 	else
@@ -69,14 +71,21 @@ int main() {
 	//		cin >> weight[i][j];
 
 	int rows = 5, cols = 6;
+	//int weight1[][6] = {
+	//	{ 3,4,1,2,8,6 },
+	//	{ 6,1,8,2,7,4 },
+	//	{ 5,9,3,9,9,5 },
+	//	{ 8,4,1,3,2,6 },
+	//	{ 3,7,2,8,6,4 }
+	//};
+
 	int weight1[][6] = {
 		{ 3,4,1,2,8,6 },
 		{ 6,1,8,2,7,4 },
 		{ 5,9,3,9,9,5 },
 		{ 8,4,1,3,2,6 },
-		{ 3,7,2,8,6,4 }
+		{ 3,7,2,1,2,3 }
 	};
-
 	int **weight = new int*[rows];
 	for (int i = 0; i<rows; i++)
 		weight[i] = new int[cols];

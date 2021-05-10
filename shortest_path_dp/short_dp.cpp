@@ -12,12 +12,20 @@ int main() {
 	//		cin >> weight[i][j];
 
 	int rows = 5, cols = 6;
+	//int weight1[][6] = {
+	//	{ 3,4,1,2,8,6 },
+	//	{ 6,1,8,2,7,4 },
+	//	{ 5,9,3,9,9,5 },
+	//	{ 8,4,1,3,2,6 },
+	//	{ 3,7,2,8,6,4 }
+	//};
+
 	int weight1[][6] = {
 		{ 3,4,1,2,8,6 },
 		{ 6,1,8,2,7,4 },
 		{ 5,9,3,9,9,5 },
 		{ 8,4,1,3,2,6 },
-		{ 3,7,2,8,6,4 }
+		{ 3,7,2,1,2,3 }
 	};
 
 	int **weight = new int*[rows];
@@ -60,20 +68,20 @@ int main() {
 		// complete next column
 		for (int i = 0; i < rows; i++)
 		{
-			// left
+			// up
 			int x = j - 1;
-			int y = i;
+			int y = (i - 1 + rows) % rows;
 
-			int left = memo[y][x];
-			int min = left;
+			int up = memo[y][x];
+			int min = up;
 			memcpy(path, memo_path[y][x], j * sizeof(int));
 
-			// up
-			y = (i - 1 + rows) % rows;
-			int up = memo[y][x];
-			if (up < min)
+			// left
+			y = i;
+			int left = memo[y][x];
+			if (left < min)
 			{
-				min = up;
+				min = left;
 				memcpy(path, memo_path[y][x], j * sizeof(int));
 			}
 
