@@ -35,8 +35,7 @@ int cost(int i, int j, int **weight, int rows, int cols, int *path) { // i is th
 	return min + weight[i][j];
 }
 int main() {
-	//int rows, cols;
-	//cout << "Enter rows and cols:";
+	//int rows, cols;	
 	//cin >> rows >> cols;
 	//int **weight = new int*[rows];
 	//for (int i = 0; i<rows; i++)
@@ -44,12 +43,6 @@ int main() {
 	//for (int i = 0; i<rows; i++)
 	//	for (int j = 0; j<cols; j++)
 	//		cin >> weight[i][j];
-
-	//for (int i = 0; i<rows; i++) {
-	//	for (int j = 0; j<cols; j++)
-	//		cout << weight[i][j] << " ";
-	//	cout << endl;
-	//}
 
 	int rows = 5, cols = 6;
 	int weight1[][6] = {
@@ -64,14 +57,13 @@ int main() {
 	for (int i = 0; i<rows; i++)
 		weight[i] = new int[cols];
 
-	int *path = new int[cols];
-	int *path1 = new int[cols];
-
 
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++)
 			weight[i][j] = weight1[i][j];
 
+	int *path = new int[cols];
+	int *path1 = new int[cols];
 
 	// get the shortest path out of each cell on the right
 	int min = 0;
@@ -111,11 +103,5 @@ int main() {
 	delete path;
 	delete path1;
 
-	//find route is most difficult
-	/*
-	// now find the smallest of them
-	int min= ;
-	…some code goes here
-	cout<<"the sortest path is of length "<<min<<endl;
-	*/
+	return 0;
 }
