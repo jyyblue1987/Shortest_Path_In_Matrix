@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6B5D1D74-121F-4851-B30B-5F01E654A7EC}</ProjectGuid>
-    <RootNamespace>shortest_path_recur</RootNamespace>
+    <ProjectGuid>{A9117717-5829-441D-A4FC-4874EEC8385B}</ProjectGuid>
+    <RootNamespace>shortest_path_recur_memo</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -110,7 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="short_rec.cpp" />
+    <ClCompile Include="short_rec_memo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

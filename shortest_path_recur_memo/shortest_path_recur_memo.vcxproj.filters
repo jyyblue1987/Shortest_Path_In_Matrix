@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="short_rec.cpp">
+    <ClCompile Include="short_rec_memo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
