@@ -1,5 +1,22 @@
-#include<iostream>
+#include <iostream>
+#include <limits>
 using namespace std;
+
+void sort_array(int index[], int len)
+{
+	for (int i = 0; i < len; i++)
+	{
+		for (int j = i + 1; j < len; j++)
+		{
+			if (index[i] > index[j])
+			{
+				int temp = index[i];
+				index[i] = index[j];
+				index[j] = temp;
+			}
+		}
+	}
+}
 
 int cost(int i, int j, int **weight, int rows, int cols, int *path) { // i is the row, j is the column
 														   //base case
@@ -8,23 +25,29 @@ int cost(int i, int j, int **weight, int rows, int cols, int *path) { // i is th
 		path[j] = i;
 		return weight[i][0];
 	}
+
+	int x = j - 1;
+	int y_array[3];
+	y_array[0] = (i - 1 + rows) % rows;
+	y_array[1] = i;
+	y_array[2] = (i + 1 + rows) % rows;
+
+	sort_array(y_array, 3);
+
 	// recursive call	
-	int up = cost((i - 1 + rows) % rows, j - 1, weight, rows, cols, path);
-	int min = up;
-
 	int *path1 = new int[j];
-	int left = cost(i, j - 1, weight, rows, cols, path1);
-	if (left < min)
-	{
-		min = left;
-		memcpy(path, path1, j * sizeof(int));
-	}
+	int min = INT_MAX;
 
-	int down = cost((i + 1 + rows) % rows, j - 1, weight, rows, cols, path1);
-	if (down < min)
+	for (int k = 0; k < 3; k++)
 	{
-		min = down;
-		memcpy(path, path1, j * sizeof(int));
+		int y = y_array[k];
+		int val = cost(y, x, weight, rows, cols, path1);
+		
+		if (val < min)
+		{
+			min = val;
+			memcpy(path, path1, j * sizeof(int));
+		}
 	}
 
 	delete path1;
@@ -35,40 +58,40 @@ int cost(int i, int j, int **weight, int rows, int cols, int *path) { // i is th
 	return min + weight[i][j];
 }
 int main() {
-	//int rows, cols;	
-	//cin >> rows >> cols;
-	//int **weight = new int*[rows];
-	//for (int i = 0; i<rows; i++)
-	//	weight[i] = new int[cols];
-	//for (int i = 0; i<rows; i++)
-	//	for (int j = 0; j<cols; j++)
-	//		cin >> weight[i][j];
+	int rows, cols;	
+	cin >> rows >> cols;
+	int **weight = new int*[rows];
+	for (int i = 0; i<rows; i++)
+		weight[i] = new int[cols];
+	for (int i = 0; i<rows; i++)
+		for (int j = 0; j<cols; j++)
+			cin >> weight[i][j];
 
-	int rows = 5, cols = 6;
+	//int rows = 5, cols = 6;
+	////int weight1[][6] = {
+	////	{ 3,4,1,2,8,6 },
+	////	{ 6,1,8,2,7,4 },
+	////	{ 5,9,3,9,9,5 },
+	////	{ 8,4,1,3,2,6 },
+	////	{ 3,7,2,8,6,4 }
+	////};
+
 	//int weight1[][6] = {
 	//	{ 3,4,1,2,8,6 },
 	//	{ 6,1,8,2,7,4 },
 	//	{ 5,9,3,9,9,5 },
 	//	{ 8,4,1,3,2,6 },
-	//	{ 3,7,2,8,6,4 }
+	//	{ 3,7,2,1,2,3 }
 	//};
 
-	int weight1[][6] = {
-		{ 3,4,1,2,8,6 },
-		{ 6,1,8,2,7,4 },
-		{ 5,9,3,9,9,5 },
-		{ 8,4,1,3,2,6 },
-		{ 3,7,2,1,2,3 }
-	};
-
-	int **weight = new int*[rows];
-	for (int i = 0; i<rows; i++)
-		weight[i] = new int[cols];
+	//int **weight = new int*[rows];
+	//for (int i = 0; i<rows; i++)
+	//	weight[i] = new int[cols];
 
 
-	for (int i = 0; i < rows; i++)
-		for (int j = 0; j < cols; j++)
-			weight[i][j] = weight1[i][j];
+	//for (int i = 0; i < rows; i++)
+	//	for (int j = 0; j < cols; j++)
+	//		weight[i][j] = weight1[i][j];
 
 	int *path = new int[cols];
 	int *path1 = new int[cols];
@@ -93,7 +116,6 @@ int main() {
 		}
 	}
 
-	cout << min << endl;
 	for (int i = 0; i < cols; i++)
 	{
 		if (i > 0)
@@ -103,6 +125,8 @@ int main() {
 	}
 
 	cout << endl;
+	cout << min << endl;
+
 
 	for (int i = 0; i < rows; i++)
 		delete weight[i];

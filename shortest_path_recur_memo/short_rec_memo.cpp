@@ -1,7 +1,23 @@
-#include<iostream>
+#include <iostream>
+#include <limits>
 using namespace std;
 
-#define MAX_VAL 2147483648
+void sort_array(int index[], int len)
+{
+	for (int i = 0; i < len; i++)
+	{
+		for (int j = i + 1; j < len; j++)
+		{
+			if (index[i] > index[j])
+			{
+				int temp = index[i];
+				index[i] = index[j];
+				index[j] = temp;
+			}
+		}
+	}
+}
+
 
 int cost(int i, int j, int **weight, int rows, int cols, int *path, int **memo, int ***memo_path) { // i is the row, j is the column
 																	  //base case
@@ -10,45 +26,34 @@ int cost(int i, int j, int **weight, int rows, int cols, int *path, int **memo, 
 		path[j] = i;
 		return weight[i][0];
 	}
-	int x = 0, y = 0;
-	// recursive call		
-	x = j - 1;
-	y = (i - 1 + rows) % rows;
-	int up = memo[y][x];
-	if (up == MAX_VAL)
-		up = cost(y, x, weight, rows, cols, path, memo, memo_path);
-	else
-		memcpy(path, memo_path[y][x], j * sizeof(int));
+	int x = j - 1;
+	int y_array[3];
 
-	int min = up;
+	y_array[0] = (i - 1 + rows) % rows;
+	y_array[1] = i;
+	y_array[2] = (i + 1 + rows) % rows;
 
-	int *path1 = new int[j];	
-	
-	y = i;
-	int left = memo[y][x];
-	if( up == MAX_VAL )
-		up = cost(y, x, weight, rows, cols, path1, memo, memo_path);
-	else
-		memcpy(path1, memo_path[y][x], j * sizeof(int));
+	sort_array(y_array, 3);
 
-	if (up < min)
+	// recursive call	
+	int *path1 = new int[j];
+	int min = INT_MAX;
+
+	for (int k = 0; k < 3; k++)
 	{
-		min = up;
-		memcpy(path, path1, j * sizeof(int));
-	}
+		int y = y_array[k];
+		int val = memo[y][x];
 
-	y = (i + 1 + rows) % rows;
-	int down = memo[y][x];
+		if( val == INT_MAX)
+			val = cost(y, x, weight, rows, cols, path1, memo, memo_path);
+		else
+			memcpy(path1, memo_path[y][x], j * sizeof(int));
 
-	if (down == MAX_VAL)
-		down = cost(y, x, weight, rows, cols, path1, memo, memo_path);
-	else
-		memcpy(path1, memo_path[y][x], j * sizeof(int));
-
-	if (down < min)
-	{
-		min = down;
-		memcpy(path, path1, j * sizeof(int));
+		if (val < min)
+		{
+			min = val;
+			memcpy(path, path1, j * sizeof(int));
+		}
 	}
 
 	delete path1;
@@ -61,39 +66,39 @@ int cost(int i, int j, int **weight, int rows, int cols, int *path, int **memo, 
 	return memo[i][j];
 }
 int main() {
-	//int rows, cols;	
-	//cin >> rows >> cols;
-	//int **weight = new int*[rows];
-	//for (int i = 0; i<rows; i++)
-	//	weight[i] = new int[cols];
-	//for (int i = 0; i<rows; i++)
-	//	for (int j = 0; j<cols; j++)
-	//		cin >> weight[i][j];
+	int rows, cols;	
+	cin >> rows >> cols;
+	int **weight = new int*[rows];
+	for (int i = 0; i<rows; i++)
+		weight[i] = new int[cols];
+	for (int i = 0; i<rows; i++)
+		for (int j = 0; j<cols; j++)
+			cin >> weight[i][j];
 
-	int rows = 5, cols = 6;
+	//int rows = 5, cols = 6;
+	////int weight1[][6] = {
+	////	{ 3,4,1,2,8,6 },
+	////	{ 6,1,8,2,7,4 },
+	////	{ 5,9,3,9,9,5 },
+	////	{ 8,4,1,3,2,6 },
+	////	{ 3,7,2,8,6,4 }
+	////};
+
 	//int weight1[][6] = {
 	//	{ 3,4,1,2,8,6 },
 	//	{ 6,1,8,2,7,4 },
 	//	{ 5,9,3,9,9,5 },
 	//	{ 8,4,1,3,2,6 },
-	//	{ 3,7,2,8,6,4 }
+	//	{ 3,7,2,1,2,3 }
 	//};
-
-	int weight1[][6] = {
-		{ 3,4,1,2,8,6 },
-		{ 6,1,8,2,7,4 },
-		{ 5,9,3,9,9,5 },
-		{ 8,4,1,3,2,6 },
-		{ 3,7,2,1,2,3 }
-	};
-	int **weight = new int*[rows];
-	for (int i = 0; i<rows; i++)
-		weight[i] = new int[cols];
+	//int **weight = new int*[rows];
+	//for (int i = 0; i<rows; i++)
+	//	weight[i] = new int[cols];
 
 
-	for (int i = 0; i < rows; i++)
-		for (int j = 0; j < cols; j++)
-			weight[i][j] = weight1[i][j];
+	//for (int i = 0; i < rows; i++)
+	//	for (int j = 0; j < cols; j++)
+	//		weight[i][j] = weight1[i][j];
 	
 
 	int *path = new int[cols];
@@ -106,7 +111,7 @@ int main() {
 
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++)
-			memo[i][j] = MAX_VAL;
+			memo[i][j] = INT_MAX;
 
 	// memo path
 	int ***memo_path = new int**[rows];
@@ -137,7 +142,6 @@ int main() {
 		}
 	}
 
-	cout << min << endl;
 	for (int i = 0; i < cols; i++)
 	{
 		if (i > 0)
@@ -147,6 +151,8 @@ int main() {
 	}
 
 	cout << endl;
+
+	cout << min << endl;
 
 	for (int i = 0; i < rows; i++)
 		delete weight[i];

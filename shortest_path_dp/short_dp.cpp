@@ -1,17 +1,34 @@
-#include<iostream>
+#include <iostream>
+#include <limits>
 using namespace std;
 
-int main() {
-	//int rows, cols;	
-	//cin >> rows >> cols;
-	//int **weight = new int*[rows];
-	//for (int i = 0; i<rows; i++)
-	//	weight[i] = new int[cols];
-	//for (int i = 0; i<rows; i++)
-	//	for (int j = 0; j<cols; j++)
-	//		cin >> weight[i][j];
+void sort_array(int index[], int len)
+{
+	for (int i = 0; i < len; i++)
+	{
+		for (int j = i + 1; j < len; j++)
+		{
+			if (index[i] > index[j])
+			{
+				int temp = index[i];
+				index[i] = index[j];
+				index[j] = temp;
+			}
+		}
+	}
+}
 
-	int rows = 5, cols = 6;
+int main() {
+	int rows, cols;	
+	cin >> rows >> cols;
+	int **weight = new int*[rows];
+	for (int i = 0; i<rows; i++)
+		weight[i] = new int[cols];
+	for (int i = 0; i<rows; i++)
+		for (int j = 0; j<cols; j++)
+			cin >> weight[i][j];
+
+	//int rows = 5, cols = 6;
 	//int weight1[][6] = {
 	//	{ 3,4,1,2,8,6 },
 	//	{ 6,1,8,2,7,4 },
@@ -20,22 +37,22 @@ int main() {
 	//	{ 3,7,2,8,6,4 }
 	//};
 
-	int weight1[][6] = {
-		{ 3,4,1,2,8,6 },
-		{ 6,1,8,2,7,4 },
-		{ 5,9,3,9,9,5 },
-		{ 8,4,1,3,2,6 },
-		{ 3,7,2,1,2,3 }
-	};
+	//int weight1[][6] = {
+	//	{ 3,4,1,2,8,6 },
+	//	{ 6,1,8,2,7,4 },
+	//	{ 5,9,3,9,9,5 },
+	//	{ 8,4,1,3,2,6 },
+	//	{ 3,7,2,1,2,3 }
+	//};
 
-	int **weight = new int*[rows];
-	for (int i = 0; i<rows; i++)
-		weight[i] = new int[cols];
+	//int **weight = new int*[rows];
+	//for (int i = 0; i<rows; i++)
+	//	weight[i] = new int[cols];
 
 
-	for (int i = 0; i < rows; i++)
-		for (int j = 0; j < cols; j++)
-			weight[i][j] = weight1[i][j];
+	//for (int i = 0; i < rows; i++)
+	//	for (int j = 0; j < cols; j++)
+	//		weight[i][j] = weight1[i][j];
 
 
 	int *path = new int[cols];
@@ -63,6 +80,7 @@ int main() {
 
 
 	int min = 0;
+	int y_array[3];
 	for (int j = 1; j < cols; j++)
 	{
 		// complete next column
@@ -70,28 +88,25 @@ int main() {
 		{
 			// up
 			int x = j - 1;
-			int y = (i - 1 + rows) % rows;
 
-			int up = memo[y][x];
-			int min = up;
-			memcpy(path, memo_path[y][x], j * sizeof(int));
+			y_array[0] = (i - 1 + rows) % rows;
+			y_array[1] = i;
+			y_array[2] = (i + 1 + rows) % rows;
 
-			// left
-			y = i;
-			int left = memo[y][x];
-			if (left < min)
+			sort_array(y_array, 3);
+
+			int min = INT_MAX;
+			for (int k = 0; k < 3; k++)
 			{
-				min = left;
-				memcpy(path, memo_path[y][x], j * sizeof(int));
-			}
+				int y = y_array[k];
 
-			// down
-			y = (i + 1 + rows) % rows;
-			int down = memo[y][x];
-			if (down < min)
-			{
-				min = down;
-				memcpy(path, memo_path[y][x], j * sizeof(int));
+				int value = memo[y][x];
+				if( value < min )
+				{
+					min = value;
+					memcpy(path, memo_path[y][x], j * sizeof(int));
+				}
+			
 			}
 
 			memo[i][j] = min + weight[i][j];
@@ -113,7 +128,6 @@ int main() {
 		}
 	}
 
-	cout << min << endl;
 	for (int i = 0; i < cols; i++)
 	{
 		if (i > 0)
@@ -123,6 +137,9 @@ int main() {
 	}
 
 	cout << endl;
+
+	cout << min << endl;
+
 
 	for (int i = 0; i < rows; i++)
 		delete weight[i];
